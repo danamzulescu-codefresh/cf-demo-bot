@@ -15,9 +15,6 @@ def run_command(full_command):
         sys.exit(1)
     return b''.join(output).strip().decode()  # only save stdout into output, ignore stderr
 
-# def pr_merge(github_token):
-#     g = Github(github_token)
-
 def replace_line(file_name, line_num, text):
     lines = open(file_name, 'r').readlines()
     lines[line_num] = text
@@ -31,6 +28,8 @@ def main():
     target_branch = os.getenv('TARGET_BRANCH')
     github_token = os.getenv('GITHUB_TOKEN')
     revision = os.getenv('REVISION')
+    repo_name = os.getenv('REPO_NAME')
+    repo_owner = os.getenv('REPO_OWNER')
 
     # Configure git
 
@@ -70,17 +69,17 @@ def main():
 
     # Clean directory
 
-    output = run_command('rm -rf /codefresh/volume/example-voting-app')
+    output = run_command('rm -rf /codefresh/volume/{}'.format(repo_name))
     print(output)
 
     # Clone repository
 
-    output = run_command('git clone https://salesdemocf:{}@github.com/salesdemocf/example-voting-app.git /codefresh/volume/example-voting-app'.format(github_token))
+    output = run_command('git clone https://{}:{}@github.com/{}/{}.git /codefresh/volume/{}'.format(repo_owner, github_token, repo_owner, repo_name, repo_name))
     print(output)
 
     # Change working directory
 
-    os.chdir('/codefresh/volume/example-voting-app')
+    os.chdir('/codefresh/volume/{}'.format(repo_name))
 
     # Clean remote branches
 
@@ -133,7 +132,7 @@ def main():
 
     # Set repo
 
-    repo = g.get_repo('salesdemocf/example-voting-app')
+    repo = g.get_repo('{}/{}'.format(repo_owner, repo_name))
 
     # Create pull request
 
@@ -156,7 +155,7 @@ def main():
 
     time.sleep(5)
 
-    branch_data = g.get_repo('salesdemocf/example-voting-app').get_branch(target_branch)
+    branch_data = g.get_repo('{}}/{}'.format(repo_owner, repo_name)).get_branch(target_branch)
 
     repo.create_git_tag_and_release(tag='4.0.{}'.format(revision), tag_message='Freshbot Demo Automation', object=branch_data.commit.sha, type='sha', release_name='{} vs. {}'.format(place, resort), release_message='Freshbot Demo Automation', prerelease=False)
 
