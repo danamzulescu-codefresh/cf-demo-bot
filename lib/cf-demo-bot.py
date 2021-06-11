@@ -155,7 +155,7 @@ def main():
 
     time.sleep(5)
 
-    branch_data = g.get_repo('{}}/{}'.format(repo_owner, repo_name)).get_branch(target_branch)
+    branch_data = g.get_repo('{}/{}'.format(repo_owner, repo_name)).get_branch(target_branch)
 
     repo.create_git_tag_and_release(tag='4.0.{}'.format(revision), tag_message='Freshbot Demo Automation', object=branch_data.commit.sha, type='sha', release_name='{} vs. {}'.format(place, resort), release_message='Freshbot Demo Automation', prerelease=False)
 
