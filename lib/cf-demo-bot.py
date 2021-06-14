@@ -123,8 +123,8 @@ def main():
     merge_pull_request = None
     while merge_pull_request is None:
         try:
-            print('Waiting 600 seconds for Pull Request builds')
-            time.sleep(600)
+            print('Waiting 900 seconds for Pull Request builds')
+            time.sleep(900)
             merge_pull_request = pull_request.merge(commit_title='Freshbot Demo Automation', commit_message='Committed by Codefresh Freshbot', merge_method='merge')
         except:
             pass
