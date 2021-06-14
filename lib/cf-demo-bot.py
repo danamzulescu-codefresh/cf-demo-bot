@@ -1,6 +1,5 @@
 import fileinput
 import os
-import random
 import sys
 import subprocess
 import time
@@ -25,6 +24,9 @@ def replace_line(file_name, line_num, text):
 
 def main():
 
+    choice_a = os.getenv('CHOICE_A')
+    choice_b = os.getenv('CHOICE_B')
+    jira_issue_id = os.getenv('JIRA_ISSUE_ID')
     target_branch = os.getenv('TARGET_BRANCH')
     github_token = os.getenv('GITHUB_TOKEN')
     revision = os.getenv('REVISION')
@@ -39,33 +41,9 @@ def main():
     output = run_command('git config --global user.name "Freshbot"')
     print(output)
 
-    places = [
-        'Seattle',
-        'New York',
-        'Austin',
-        'Chicago',
-        'Denver',
-        'San Francisco',
-        'Boston',
-        'Miami',
-        'New Orleans',
-        'Portland'
-    ]
-    place = random.choice(places)
-    code_friendly_place = place.replace(' ', '-').lower()
-    resorts = [
-        'Lego Land',
-        'Disney Land',
-        'Disney World',
-        'Six Flags',
-        'Universal',
-        'Hershey Park',
-        'Cedar Point',
-        'Kings Island',
-        'Epcot'
-    ]
-    resort = random.choice(resorts)
-    code_friendly_resort = resort.replace(' ', '-').lower()
+    code_friendly_place = choice_a.replace(' ', '-').lower()
+
+    code_friendly_resort = choice_b.replace(' ', '-').lower()
 
     # Clean directory
 
@@ -97,21 +75,21 @@ def main():
 
     # Create branch
 
-    feature_branch = '{}-or-{}'.format(code_friendly_place, code_friendly_resort)
+    feature_branch = '{}-{}-or-{}'.format(jira_issue_id, code_friendly_place, code_friendly_resort)
    
     output = run_command('git checkout -b {}'.format(feature_branch))
     print(output)
 
     # Replace lines
 
-    replace_line('tests/selenium/test_app.py', 34, '    option_a = "{}"\n'.format(place))
-    replace_line('tests/selenium/test_app.py', 35, '    option_b = "{}"\n'.format(resort))
+    replace_line('tests/selenium/test_app.py', 34, '    option_a = "{}"\n'.format(choice_a))
+    replace_line('tests/selenium/test_app.py', 35, '    option_b = "{}"\n'.format(choice_b))
 
-    replace_line('vote/app.py', 7, 'option_a = os.getenv(\'OPTION_A\', "{}")\n'.format(place))
-    replace_line('vote/app.py', 8, 'option_b = os.getenv(\'OPTION_B\', "{}")\n'.format(resort))
+    replace_line('vote/app.py', 7, 'option_a = os.getenv(\'OPTION_A\', "{}")\n'.format(choice_a))
+    replace_line('vote/app.py', 8, 'option_b = os.getenv(\'OPTION_B\', "{}")\n'.format(choice_b))
 
-    replace_line('result/views/index.html', 22, '            <div class="label">{}</div>\n'.format(place))
-    replace_line('result/views/index.html', 27, '            <div class="label">{}</div>\n'.format(resort))
+    replace_line('result/views/index.html', 22, '            <div class="label">{}</div>\n'.format(choice_a))
+    replace_line('result/views/index.html', 27, '            <div class="label">{}</div>\n'.format(choice_b))
 
     # Create commit
     output = run_command('git commit -am "update for {}"'.format(feature_branch))
@@ -157,7 +135,7 @@ def main():
 
     branch_data = g.get_repo('{}/{}'.format(repo_owner, repo_name)).get_branch(target_branch)
 
-    repo.create_git_tag_and_release(tag='4.0.{}'.format(revision), tag_message='Freshbot Demo Automation', object=branch_data.commit.sha, type='sha', release_name='{} vs. {}'.format(place, resort), release_message='Freshbot Demo Automation', prerelease=False)
+    repo.create_git_tag_and_release(tag='4.0.{}'.format(revision), tag_message='Freshbot Demo Automation', object=branch_data.commit.sha, type='sha', release_name='{} vs. {}'.format(choice_a, choice_b), release_message='Freshbot Demo Automation', prerelease=False)
 
 if __name__ == "__main__":
     main()
