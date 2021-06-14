@@ -82,8 +82,8 @@ def main():
 
     # Replace lines
 
-    replace_line('tests/selenium/test_app.py', 34, '    option_a = "{}"\n'.format(choice_a))
-    replace_line('tests/selenium/test_app.py', 35, '    option_b = "{}"\n'.format(choice_b))
+    replace_line('tests/selenium/test_app_vote.py', 34, '    option_a = "{}"\n'.format(choice_a))
+    replace_line('tests/selenium/test_app_vote.py', 35, '    option_b = "{}"\n'.format(choice_b))
 
     replace_line('vote/app.py', 7, 'option_a = os.getenv(\'OPTION_A\', "{}")\n'.format(choice_a))
     replace_line('vote/app.py', 8, 'option_b = os.getenv(\'OPTION_B\', "{}")\n'.format(choice_b))
