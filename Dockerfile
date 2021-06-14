@@ -20,6 +20,7 @@ RUN npm install codefresh
 RUN pip install PyGithub
 
 COPY lib/cf-demo-bot.py /cf-demo-bot.py
+COPY lib/x-men-randomizer.py /x-men-randomizer.py
 
 ENTRYPOINT ["python", "/cf-demo-bot.py"]
 CMD [""]
