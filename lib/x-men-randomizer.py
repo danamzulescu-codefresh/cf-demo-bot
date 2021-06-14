@@ -15,15 +15,13 @@ def run_command(full_command):
 def main():
 
     heroes = [
-        'Professor X',
         'Wolverine',
         'Storm',
         'Beast',
         'Rogue',
         'Cyclops',
         'Gambit',
-        'Jubilee',
-        'Jean Grey'
+        'Jubilee'
     ]
     hero = random.choice(heroes)
     run_command('cf_export HERO={}'.format(hero))
@@ -35,11 +33,10 @@ def main():
         'Sabretooth',
         'Toad',
         'Mojo',
-        'Pyro',
-        'Silver Samurai'
+        'Pyro'
     ]
     villain = random.choice(villains)
-    run_command('cf_export VILLAIN={}'.format(villain))
+    run_command('cf_export VILLAIN="{}"'.format(villain))
 
 if __name__ == "__main__":
     main()
