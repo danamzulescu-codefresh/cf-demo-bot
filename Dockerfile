@@ -21,5 +21,5 @@ RUN pip install PyGithub
 
 COPY lib/cf-demo-bot.py /cf-demo-bot.py
 
-ENTRYPOINT ["python", "/cf-demo-bot.py"]
+#ENTRYPOINT ["python", "/cf-demo-bot.py"]
 CMD [""]
